@@ -1,5 +1,5 @@
-const exampleMiddleware = require("./exampleMiddleware");
+const jwtMiddleware = require("./jwtMiddleware");
 
 module.exports = {
-  exampleMiddleware,
+  jwtMiddleware,
 };

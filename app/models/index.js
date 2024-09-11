@@ -1,10 +1,11 @@
 const config = require("../config/db");
-
+const redis = require('redis');
+const joi = require("joi");
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
   host: config.HOST,
   dialect: config.dialect,
-  operatorsAliases: false,
+  operatorsAliases: 0,
 
   pool: {
     max: config.pool.max,
@@ -35,4 +36,22 @@ db.sequelize = sequelize;
 //   as: "role",
 // });
 
-module.exports = db;
+const redisClient = redis.createClient();
+redisClient.on('error', (err) => console.error('Redis error:', err));
+redisClient.connect()
+
+const refactoreMe2RequestSchema = joi.object({
+  userId: joi.number()
+    .min(0)
+    .required(),
+
+  values: joi.array().items(
+    joi.number()
+      .min(0)
+      .required()
+  )
+    .min(0)
+    .required(),
+})
+
+module.exports = { db, redisClient, refactoreMe2RequestSchema };
